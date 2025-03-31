@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Fukuro
+Comment=Simple and efficient RSS reader
+Exec=fukuro
+Terminal=false
+Type=Application
+Categories=Network;News;
+Keywords=rss;feed;reader;news;blog;
+Icon=com.gavrielsha.Fukuro
+StartupWMClass=fukuro

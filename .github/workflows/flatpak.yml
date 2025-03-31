@@ -38,8 +38,8 @@ jobs:
         run: |
           mkdir -p flatpak/opt/fukuro
           cp -r dist/linux-unpacked/* flatpak/opt/fukuro/ || cp -r dist/linux-x64-unpacked/* flatpak/opt/fukuro/
-          mkdir -p flatpak/app/share/icons/hicolor/512x512/apps/
-          cp public/icon.png flatpak/app/share/icons/hicolor/512x512/apps/com.gavrielsha.Fukuro.png
+          # Copy icon directly to the flatpak directory
+          cp public/icon.png flatpak/icon.png
       
       - name: Create Flatpak deployment files
         run: |

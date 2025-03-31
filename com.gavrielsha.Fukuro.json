@@ -1,0 +1,54 @@
+{
+  "app-id": "com.gavrielsha.Fukuro",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "22.08",
+  "sdk": "org.freedesktop.Sdk",
+  "base": "org.electronjs.Electron2.BaseApp",
+  "base-version": "22.08",
+  "command": "fukuro",
+  "separate-locales": false,
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=home"
+  ],
+  "modules": [
+    {
+      "name": "fukuro",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 fukuro /app/bin/fukuro",
+        "install -Dm644 com.gavrielsha.Fukuro.desktop /app/share/applications/com.gavrielsha.Fukuro.desktop",
+        "install -Dm644 com.gavrielsha.Fukuro.metainfo.xml /app/share/metainfo/com.gavrielsha.Fukuro.metainfo.xml",
+        "install -Dm644 icon.png /app/share/icons/hicolor/512x512/apps/com.gavrielsha.Fukuro.png",
+        "cp -r opt/* /app/opt/"
+      ],
+      "sources": [
+        {
+          "type": "file",
+          "path": "fukuro.sh",
+          "dest-filename": "fukuro"
+        },
+        {
+          "type": "file",
+          "path": "com.gavrielsha.Fukuro.desktop"
+        },
+        {
+          "type": "file",
+          "path": "com.gavrielsha.Fukuro.metainfo.xml"
+        },
+        {
+          "type": "file",
+          "path": "icon.png"
+        },
+        {
+          "type": "dir",
+          "path": "opt"
+        }
+      ]
+    }
+  ]
+}

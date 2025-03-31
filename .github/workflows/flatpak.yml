@@ -10,9 +10,6 @@ on:
 jobs:
   build-flatpak:
     runs-on: ubuntu-latest
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:gnome-44
-      options: --privileged
     steps:
       - uses: actions/checkout@v3
 
@@ -39,7 +36,7 @@ jobs:
         run: |
           mkdir -p flatpak/opt/fukuro
           cp -r dist/linux-unpacked/* flatpak/opt/fukuro/ || cp -r dist/linux-x64-unpacked/* flatpak/opt/fukuro/
-          # Copy the icon from public folder to the flatpak directory as icon.png
+          # Adjust the icon path if needed. This assumes your icon is in public/icon.png.
           cp public/icon.png flatpak/icon.png
       
       - name: Create Flatpak deployment files

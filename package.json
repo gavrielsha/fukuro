@@ -3,17 +3,47 @@
   "version": "1.0.0",
   "description": "A somewhat dumb but effective feed reader (RSS, JSON & Twitter)",
   "type": "module",
+  "main": "main.js",
   "engines": {
     "node": ">=18.x"
   },
   "scripts": {
     "build": "node src/build.js",
     "write": "node src/build.js --write",
-    "cached": "node src/build.js --cached"
+    "cached": "node src/build.js --cached",
+    "start": "electron .",
+    "package": "electron-builder",
+    "flatpak": "electron-builder --linux flatpak"
   },
   "author": "gavrielsha",
   "license": "ISC",
   "dependencies": {
     "rss-parser": "^3.6.3"
+  },
+  "devDependencies": {
+    "electron": "^29.1.0",
+    "electron-builder": "^24.13.1"
+  },
+  "build": {
+    "appId": "com.gavrielsha.fukuro",
+    "productName": "Fukuro",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "output/**/*",
+      "src/**/*",
+      "main.js",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "linux": {
+      "target": ["flatpak", "AppImage"],
+      "category": "Network;News",
+      "icon": "build/icon.png"
+    },
+    "flatpak": {
+      "useWaylandFlags": true
+    }
   }
 }

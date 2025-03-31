@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.gavrielsha.Fukuro</id>
+  <name>Fukuro</name>
+  <summary>Simple and efficient RSS reader</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>Fukuro is a simple and efficient RSS reader that allows you to follow your favorite websites and blogs in one place.</p>
+    <p>Features:</p>
+    <ul>
+      <li>Clean and minimal interface</li>
+      <li>Group feeds by category</li>
+      <li>View all articles in one place</li>
+      <li>Local application - no cloud service required</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">com.gavrielsha.Fukuro.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/yourusername/fukuro/main/demo.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/yourusername/fukuro</url>
+  <provides>
+    <binary>fukuro</binary>
+  </provides>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="1.0.0" date="2025-03-30">
+      <description>
+        <p>Initial release</p>
+      </description>
+    </release>
+  </releases>
+</component>

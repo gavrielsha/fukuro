@@ -15,6 +15,7 @@ jobs:
       options: --privileged
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18.15.0
@@ -32,18 +33,18 @@ jobs:
       - name: Set up Flatpak environment
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08
+          flatpak install -y --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08
       
       - name: Create Flatpak build structure
         run: |
           mkdir -p flatpak/opt/fukuro
           cp -r dist/linux-unpacked/* flatpak/opt/fukuro/ || cp -r dist/linux-x64-unpacked/* flatpak/opt/fukuro/
-          # Copy icon directly to the flatpak directory
+          # Copy the icon from public folder to the flatpak directory as icon.png
           cp public/icon.png flatpak/icon.png
       
       - name: Create Flatpak deployment files
         run: |
-          cat > flatpak/com.gavrielsha.Fukuro.desktop << EOL
+          cat > flatpak/com.gavrielsha.Fukuro.desktop << 'EOL'
           [Desktop Entry]
           Name=Fukuro
           Comment=Simple and efficient RSS reader
@@ -56,7 +57,7 @@ jobs:
           StartupWMClass=fukuro
           EOL
           
-          cat > flatpak/com.gavrielsha.Fukuro.metainfo.xml << EOL
+          cat > flatpak/com.gavrielsha.Fukuro.metainfo.xml << 'EOL'
           <?xml version="1.0" encoding="UTF-8"?>
           <component type="desktop-application">
             <id>com.gavrielsha.Fukuro</id>
@@ -95,15 +96,15 @@ jobs:
           </component>
           EOL
           
-          cat > flatpak/fukuro.sh << EOL
+          cat > flatpak/fukuro.sh << 'EOL'
           #!/bin/sh
-          exec /app/opt/fukuro/fukuro "\$@"
+          exec /app/opt/fukuro/fukuro "$@"
           EOL
           chmod +x flatpak/fukuro.sh
       
       - name: Create Flatpak manifest
         run: |
-          cat > com.gavrielsha.Fukuro.json << EOL
+          cat > com.gavrielsha.Fukuro.json << 'EOL'
           {
             "app-id": "com.gavrielsha.Fukuro",
             "runtime": "org.freedesktop.Platform",

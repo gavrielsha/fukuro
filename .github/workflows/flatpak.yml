@@ -10,53 +10,40 @@ on:
 jobs:
   build-flatpak:
     runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:gnome-44
+      options: --privileged
     steps:
-      # 1) Check out your code
       - uses: actions/checkout@v3
-
-      # 2) Install Node.js (for npm)
       - uses: actions/setup-node@v3
         with:
           node-version: 18.15.0
-
-      # 3) Install Flatpak + flatpak-builder on the Ubuntu runner
-      - name: Install Flatpak tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak flatpak-builder
-
-      # 4) Install npm dependencies
+          
       - name: Install dependencies
         run: |
           npm install
           npm install --save-dev electron electron-builder
-
-      # 5) Build the Electron app
+      
       - name: Build electron app
         run: |
           npm run build
           npm run package -- --linux dir
-
-      # 6) Add Flathub remote and install required runtimes
+      
       - name: Set up Flatpak environment
         run: |
           flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-          flatpak install -y --noninteractive flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08
-
-      # 7) Prepare the Flatpak directory structure
+          flatpak install -y flathub org.freedesktop.Platform//22.08 org.freedesktop.Sdk//22.08 org.electronjs.Electron2.BaseApp//22.08
+      
       - name: Create Flatpak build structure
         run: |
           mkdir -p flatpak/opt/fukuro
-          # Copy the Electron build output
           cp -r dist/linux-unpacked/* flatpak/opt/fukuro/ || cp -r dist/linux-x64-unpacked/* flatpak/opt/fukuro/
-          # Copy your icon from wherever it's located (adjust this path as needed!)
-          # Example: cp public/icon.png flatpak/icon.png
+          # Copy icon directly to the flatpak directory
           cp public/icon.png flatpak/icon.png
-
-      # 8) Create deployment (desktop, metainfo, launcher) files inside flatpak/
+      
       - name: Create Flatpak deployment files
         run: |
-          cat > flatpak/com.gavrielsha.Fukuro.desktop << 'EOL'
+          cat > flatpak/com.gavrielsha.Fukuro.desktop << EOL
           [Desktop Entry]
           Name=Fukuro
           Comment=Simple and efficient RSS reader
@@ -69,7 +56,7 @@ jobs:
           StartupWMClass=fukuro
           EOL
           
-          cat > flatpak/com.gavrielsha.Fukuro.metainfo.xml << 'EOL'
+          cat > flatpak/com.gavrielsha.Fukuro.metainfo.xml << EOL
           <?xml version="1.0" encoding="UTF-8"?>
           <component type="desktop-application">
             <id>com.gavrielsha.Fukuro</id>
@@ -108,16 +95,15 @@ jobs:
           </component>
           EOL
           
-          cat > flatpak/fukuro.sh << 'EOL'
+          cat > flatpak/fukuro.sh << EOL
           #!/bin/sh
-          exec /app/opt/fukuro/fukuro "$@"
+          exec /app/opt/fukuro/fukuro "\$@"
           EOL
           chmod +x flatpak/fukuro.sh
-
-      # 9) Create the Flatpak manifest
+      
       - name: Create Flatpak manifest
         run: |
-          cat > com.gavrielsha.Fukuro.json << 'EOL'
+          cat > com.gavrielsha.Fukuro.json << EOL
           {
             "app-id": "com.gavrielsha.Fukuro",
             "runtime": "org.freedesktop.Platform",
@@ -157,25 +143,21 @@ jobs:
             ]
           }
           EOL
-
-      # 10) Build the Flatpak
+      
       - name: Build Flatpak
         run: |
           flatpak-builder --repo=repo --force-clean build-dir com.gavrielsha.Fukuro.json
-
-      # 11) Bundle the Flatpak into a single file
+      
       - name: Create Flatpak bundle
         run: |
           flatpak build-bundle repo fukuro.flatpak com.gavrielsha.Fukuro
-
-      # 12) Upload the bundle as an artifact
+      
       - name: Upload Flatpak bundle as artifact
         uses: actions/upload-artifact@v4
         with:
           name: fukuro-flatpak
           path: fukuro.flatpak
-
-      # 13) Create a Release (if pushing a tag like v1.0.0)
+      
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')

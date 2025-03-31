@@ -16,7 +16,7 @@ A simple, efficient RSS reader desktop application based on the excellent [Bubo 
 
 ### Option 1: Download the Flatpak
 
-1. Download the latest Flatpak from the [Releases page](https://github.com/yourusername/fukuro/releases)
+1. Download the latest Flatpak from the [Releases page](https://github.com/gavrielsha/fukuro/releases)
 2. Install it with:
    ```
    flatpak install --user ./fukuro.flatpak
